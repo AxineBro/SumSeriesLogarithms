@@ -8,7 +8,6 @@ namespace Sum_Series_Logarithms
 {
     /*
        ln(x + sqrt(x^2 + 1)) = x - 1/2 * x^3/3 + 1*3 / (2 * 4) * x^5/5 ... R = 1
-
     */
     class Program
     {
@@ -19,27 +18,30 @@ namespace Sum_Series_Logarithms
             double Eps;
             int N;
 
-            
+
             do
             {
                 Console.Write("x (от: -1, до: 1) -> ");
                 X = Convert.ToDouble(Console.ReadLine());
             } while (X > 1 || X < -1);
             Console.Write("Число членов ряда ->  ");
-            N = Convert.ToInt16(Console.ReadLine());
+            do
+            {
+                N = Convert.ToInt16(Console.ReadLine());
+            } while (N <= 0);
             do
             {
                 Console.Write("Точность ->  ");
                 Eps = Convert.ToDouble(Console.ReadLine());
             } while (Eps > 1);
-            
+
 
             Sum(X, Eps, N);
 
             Console.Write("Результат формулы: " + Math.Log(X + Math.Sqrt(Math.Pow(X, 2) + 1)));
             Console.ReadKey();
 
-        } 
+        }
 
         static void Sum(double x, double eps, int n)
         {
@@ -49,26 +51,28 @@ namespace Sum_Series_Logarithms
             bool stopN = true;
             bool stopEps = true;
             bool stop2 = true;
-            int counter = 1;
+            int counter = 0;
             sum = 0;
             double x2 = x * x;
             currentElement = x;
+            double result = Math.Log(x + Math.Sqrt(Math.Pow(x, 2) + 1));
+
             do
             {
                 sum += currentElement;
-                currentElement = -currentElement * x2 * counter * counter / ((counter + 1) * (counter + 2));
+                currentElement = -currentElement * x2 * (2 * counter + 1) * (2 * counter + 1) / ((2 * counter + 2) * (2 * counter + 3));
                 counter++;
 
-                if (counter == n)
+                if ((counter + 1) == n)
                 {
-                    Console.WriteLine("sum=" + sum + " N=" + counter);
+                    Console.WriteLine("sum=" + sum + " N=" + (counter + 1));
                     stopN = false;
                 }
                 if (stopEps)
                 {
                     if (Math.Abs(currentElement) < eps)
                     {
-                        Console.WriteLine("sum= " + sum + " K=" + counter);
+                        Console.WriteLine("sum= " + sum + " K=" + (counter + 1));
                         if (stop2)
                         {
                             eps = eps / 10;
@@ -77,7 +81,6 @@ namespace Sum_Series_Logarithms
                         else stopEps = false;
                     }
                 }
-
             } while (stopN || stopEps || stop2);
         }
     }
